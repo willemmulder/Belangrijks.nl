@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Stream</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <meta name="theme-color" content="#fafafa">
+
+    <style>
+        body, html {
+            margin: 0px;
+            padding: 0px;
+        }
+        #wrapper {
+            font: 14px arial;
+            padding: 20px;
+            text-align: center;
+        }
+        #playText {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        #playIcon {
+            height: 1em;
+            vertical-align: middle;
+            margin: 5px;
+        }
+        #player {
+            width: 100%;
+        }
+        #playerWrapper {
+            display: none;
+        }
+        #status {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>
+            Kerkomroep Hendrik-Ido-Ambacht
+        </h1>
+        <div id="playText" onclick="startPlayer();">
+            <img id="playIcon" src="./play.svg"/>
+            Klik hier om te starten met luisteren
+        </div>
+        <div id="playerWrapper">
+            <audio
+                id="player"
+                controls 
+                preload="none"
+                src="http://213.233.215.48:8080">
+                    Dit werkt helaas niet in jouw browser.
+            </audio>
+            <div id="status">
+                Status
+            </div>
+        </div>
+    </div>
+    <script>
+        let playerWrapper = document.getElementById("playerWrapper");
+        let player = document.getElementById("player");
+        let status = document.getElementById("status");
+        // General
+        function startPlayer() {
+            player.play();
+            playerWrapper.style.display = 'block';
+        }
+        // Error events
+        player.addEventListener("abort", function() { 
+            status.innerText = 'Afgebroken';
+        }, true);
+        player.addEventListener("error", function() { 
+            status.innerText = 'Fout';
+        }, true);
+        player.addEventListener("suspend", function() { 
+            //status.innerText = 'Uitgesteld';
+        }, true);	
+        // Loading
+        player.addEventListener("loadstart", function() { 
+            status.innerText = 'Laden...';
+        }, true);
+        player.addEventListener("loadedmetadata", function() { 
+            status.innerText = 'Laden... Metadata binnen.';
+        }, true);	
+        player.addEventListener("loadeddata", function() { 
+            status.innerText = 'Bufferen...';
+        }, true);
+        player.addEventListener("canplay", function() { 
+            status.innerText = 'Bufferen... Bijna voldoende data geladen.';
+        }, true);
+        player.addEventListener("canplaythrough", function() { 
+            status.innerText = 'Klaar om af te spelen';
+        }, true);
+        // Playing events
+        player.addEventListener("playing", function() { 
+            status.innerText = 'Bezig met afspelen...';
+        }, true);
+        player.addEventListener("seeking", function() { 
+            status.innerText = 'Juiste positie zoeken...';
+        }, true);
+        player.addEventListener("ended ", function() { 
+            status.innerText = 'Afgelopen';
+        }, true);
+    </script>
+</body>
+
+</html>
